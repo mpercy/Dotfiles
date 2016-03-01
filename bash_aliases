@@ -379,5 +379,7 @@ ntp_reset() {
 
 alias gist='gist-paste -po'
 
+alias bootstrap_vundle='[ ! -e ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && vim +PluginInstall +qall'
+
 # TODO: shouldn't this get sourced by the shell automatically somehow anyway?
 . ~/.bash_completions

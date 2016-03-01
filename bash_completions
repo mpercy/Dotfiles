@@ -1,4 +1,6 @@
 #. /usr/share/bash-completion/completions/make
 #complete -F _make ktt sktt hktt kbtt skbtt hkbtt gdbtt tsgdbtt klog
-. /etc/bash_completion.d/ninja
-complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog
+if [ -d /etc/bash_completion.d/ninja ]; then
+  . /etc/bash_completion.d/ninja
+  complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog
+fi
