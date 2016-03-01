@@ -11,7 +11,9 @@ Plugin 'gmarik/Vundle.vim'
 " github repos
 Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-unimpaired'
-Plugin 'Valloric/YouCompleteMe'
+if v:version >= 704
+  Plugin 'Valloric/YouCompleteMe'
+endif
 "Plugin 'Lokaltog/vim-easymotion'
 Plugin 'kien/ctrlp.vim'
 Plugin 'wincent/command-t'
@@ -98,7 +100,9 @@ set nu ruler ai ts=8 sts=2 sw=2 sr expandtab
 set mouse=a
 set ttymouse=xterm2
 " ttymouse=sgr fixes annoying 220-col limitation in terminals:
-set ttymouse=sgr
+if v:version >= 700
+  set ttymouse=sgr
+endif
 set hlsearch incsearch
 set splitright
 set viminfo='30,\"100,:20,%,n~/.viminfo
