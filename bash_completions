@@ -1,6 +1,14 @@
 #. /usr/share/bash-completion/completions/make
 #complete -F _make ktt sktt hktt kbtt skbtt hkbtt gdbtt tsgdbtt klog
-if [ -d /etc/bash_completion.d/ninja ]; then
+HAS_COMPLETIONS=''
+if [ -r /etc/bash_completion.d/ninja ]; then
   . /etc/bash_completion.d/ninja
+  HAS_COMPLETIONS=1
+elif [ -r $HOME/src/ninja/misc/bash-completion ]; then
+  . $HOME/src/ninja/misc/bash-completion
+  HAS_COMPLETIONS=1
+fi
+if [ -n "$HAS_COMPLETIONS" ]; then
   complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog
 fi
+unset HAS_COMPLETIONS
