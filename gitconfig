@@ -1,0 +1,40 @@
+[user]
+  email = mpercy@cloudera.com
+  name = Mike Percy
+
+[diff]
+  guitool = meld
+  #guitool = kompare
+  tool = sdiff
+
+[difftool "sdiff"]
+  cmd = sdiff -w 100 -s \"$LOCAL\" \"$REMOTE\"
+
+# from http://j-query.blogspot.com/2011/03/adding-colors-to-git-diff-by-default.html
+[color]
+ branch = auto
+ diff = auto
+ status = auto
+[color "branch"]
+ current = yellow bold
+ local = yellow
+ remote = green
+[color "diff"]
+ meta = yellow bold
+ frag = magenta bold
+ old = red
+ new = green
+[color "status"]
+ added = yellow
+ changed = green
+ untracked = cyan
+
+[alias]
+  dt = difftool -g -d
+  vimdiff = difftool -d
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n15
+  lgs = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n5 --stat
+  stat = status --untracked-files=no
+  br = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset)   %(color:yellow)%(refname:short)%(color:reset)\t  %(contents:subject) - %(authorname) %(color:green)(%(committerdate:relative))%(color:reset)'
+[push]
+  default = simple
