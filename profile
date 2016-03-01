@@ -29,7 +29,9 @@ fi
 ulimit -c unlimited
 
 # For Kudu
-PATH=$HOME/src/kudu/thirdparty/installed/bin:$PATH
+PATH=$PATH:$HOME/src/kudu/thirdparty/clang-toolchain/bin
+PATH=$PATH:$HOME/src/kudu/thirdparty/installed/bin
+PATH=$HOME/.local/bin:$PATH # pip install --user
 PATH=$HOME/bin/llvm-system-bin:$PATH
 PATH=/usr/lib/ccache:$PATH
 PATH=$HOME/bin/ccache:$PATH  # My preferred ccache stuff.
