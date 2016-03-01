@@ -154,14 +154,14 @@ export GLOG_colorlogtostderr=1
 # For Kudu ASAN builds.
 #export LLVM_DIR=/usr/local/llvm
 #export LLVM_DIR=/usr/local/lib/ccache # use ccache for clang
-export LLVM_DIR=$HOME/bin/ccache # use ccache for clang
+#export LLVM_DIR=$HOME/bin/ccache # use ccache for clang
 
 # Get all the deadlock stack traces from TSAN in LLVM 3.5
 export TSAN_OPTIONS=second_deadlock_stack=1
 
 # So ASAN does all the work of symbolization / c++filt for us.
 #export ASAN_SYMBOLIZER_PATH=$KUDU_HOME/thirdparty/clang-toolchain/bin/llvm-symbolizer
-export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.6
+#export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.6
 
 # Run fast tests in dev.
 export KUDU_ALLOW_SLOW_TESTS=0
