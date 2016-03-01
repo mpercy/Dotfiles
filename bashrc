@@ -137,6 +137,8 @@ stty -ixon -ixoff
 # for Flume
 #export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
 
+export EDITOR=vim
+
 #############################################
 # For Kudu
 #############################################
