@@ -24,7 +24,11 @@ alias update=update_func
 # re-enable keyboard mappings
 #alias xmm='xmodmap ~/.xmodmaprc'
 
-LLVM_SYMBOLIZER=/home/mpercy/src/kudu/thirdparty/clang-toolchain/bin/llvm-symbolizer
+export LLVM_SYMBOLIZER=/home/mpercy/src/kudu/thirdparty/clang-toolchain/bin/llvm-symbolizer
+export DEVTOOLSET='../../build-support/enable_devtoolset.sh'
+export CMAKE='../../thirdparty/installed/bin/cmake'
+NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
+export NUM_PROCS_MINUS_ONE=$(expr $NUM_PROCS - 1)
 
 kudu_gerrit_submit_branch() {
   (
@@ -76,7 +80,6 @@ kudu_gerrit_submit_current_branch() {
 alias gerrit_submit=kudu_gerrit_submit
 alias gerrit_submit_current_branch=kudu_gerrit_submit_current_branch
 
-
 kudu_run_cmake_func() {
   (
     set -x
@@ -86,43 +89,44 @@ kudu_run_cmake_func() {
       return
     fi
 
+
     if [ -z "$NO_REBUILD_THIRDPARTY" ]; then
-      ./thirdparty/build-if-necessary.sh
+      $DEVTOOLSET ../../thirdparty/build-if-necessary.sh
     fi
 
     rm -Rf CMakeCache.txt CMakeFiles/
     CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
     case $BUILD_TYPE in
       DYNDEBUG)
-        cmake ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
         ;;
       DEBUG)
-        cmake ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       CLANGDEBUG)
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       DYNCLANG)
         # Probably the fastest build method.
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
         ;;
       ASAN)
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
         ;;
       ASANDEBUG)
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
         ;;
       TSAN)
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
         ;;
       CLIENT)
-        CC=clang CXX=clang++ cmake ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
+        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
         ;;
       RELEASE|HEAPCHECK)
-        cmake ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
+        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
         ;;
     esac
-    ninja clean
+    $DEVTOOLSET ninja clean
   )
 }
 
@@ -140,7 +144,7 @@ kudu_build_func() {
   &&
   kudu_run_cmake_func $BUILD_TYPE \
   && date \
-  && time ninja -j7 $NINJA_OPTS
+  && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS
 }
 
 kudu_make_and_test_func() {
@@ -148,7 +152,7 @@ kudu_make_and_test_func() {
   kudu_build_func $BUILD_TYPE \
   && rm -rf /tmp/kudutest-1000 \
   && date \
-  && time ctest -j7
+  && time ctest -j${NUM_PROCS_MINUS_ONE}
 }
 
 alias kudu_build='kudu_make_and_test_func DEBUG'
@@ -173,9 +177,9 @@ alias kudu_cmake_tsan='kudu_run_cmake_func TSAN'
 alias kudu_cmake_client='kudu_run_cmake_func CLIENT'
 alias kudu_cmake_release='kudu_run_cmake_func RELEASE'
 
-alias kbt='rm -rf /tmp/kudutest-1000 && date && time ninja -j7 $NINJA_OPTS && ( export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j7); alert "kbt exited with return code=$?"'
-alias skbt='rm -rf /tmp/kudutest-1000 && date && time ninja -j7 $NINJA_OPTS && ( export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j7); alert "skbt exited with return code=$?"'
-#alias hkbt='rm -rf /tmp/kudutest-1000 && kudu_build_func HEAPCHECK && ( export HEAPCHECK=normal; export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; date; time ctest -j7); alert "hkbt exited with return code=$?"'
+alias kbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "kbt exited with return code=$?"'
+alias skbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "skbt exited with return code=$?"'
+#alias hkbt='rm -rf /tmp/kudutest-1000 && kudu_build_func HEAPCHECK && ( export HEAPCHECK=normal; export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "hkbt exited with return code=$?"'
 
 ktt_func() {
   if [ -z "$1" ]; then
@@ -228,7 +232,7 @@ kbtt_func() {
   (
     date
     set -ex
-    time ninja -j7 $NINJA_OPTS $1
+    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $1
     set +ex
     date
     ktt_func $*
@@ -245,7 +249,7 @@ cbtt_func() {
     unset GLOG_colorlogtostderr # avoid ANSI color garbage in the logs
     date
     set -x
-    time ninja -j7 $NINJA_OPTS $TESTNAME || return $?
+    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME || return $?
     date
     time ../../build-support/run-test.sh ./bin/$TESTNAME $@
     RETCODE=$?
@@ -300,7 +304,7 @@ gdbtt_func() {
     date
     set -e
     set -x
-    time ninja -j7 $NINJA_OPTS $TESTNAME
+    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME
     date
     GDB=$(which gdb)
     eval "$GDB $LOCAL_GDB_ARGS --args ./bin/$TESTNAME --gtest_break_on_failure $*"
@@ -322,7 +326,7 @@ klog_func() {
   )
 }
 
-alias kbf="ninja -j12 $NINJA_OPTS" # kudu-build-fast
+alias kbf="$DEVTOOLSET ninja -j12 $NINJA_OPTS" # kudu-build-fast
 alias ktt=ktt_func
 alias sktt=sktt_func
 alias hktt=hktt_func
@@ -341,7 +345,7 @@ alias kudu_buildinfo="egrep 'CMAKE_BUILD_TYPE|KUDU_USE_' CMakeCache.txt | perl -
 alias klog=klog_func
 alias heapcheck='set -x; export HEAPCHECK=normal; export LD_BIND_NOW=1; set +x'
 
-alias n=ninja
+alias n="$DEVTOOLSET ninja"
 alias cls='printf "\033c"'
 
 alias pyhttpd='python -m SimpleHTTPServer'
