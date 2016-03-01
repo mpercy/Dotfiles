@@ -100,7 +100,7 @@ set nu ruler ai ts=8 sts=2 sw=2 sr expandtab
 set mouse=a
 set ttymouse=xterm2
 " ttymouse=sgr fixes annoying 220-col limitation in terminals:
-if v:version >= 700
+if v:version >= 704
   set ttymouse=sgr
 endif
 set hlsearch incsearch
