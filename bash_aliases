@@ -104,23 +104,23 @@ kudu_run_cmake_func() {
         $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       CLANGDEBUG)
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       DYNCLANG)
         # Probably the fastest build method.
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
         ;;
       ASAN)
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
         ;;
       ASANDEBUG)
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
         ;;
       TSAN)
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
         ;;
       CLIENT)
-        $DEVTOOLSET CC=clang CXX=clang++ $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
         ;;
       RELEASE|HEAPCHECK)
         $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
