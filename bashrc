@@ -182,6 +182,3 @@ export GOPATH=$HOME/gocode
 
 export DIST_TEST_MASTER=http://dist-test.cloudera.org
 export ISOLATE_SERVER=http://isolate.cloudera.org:4242/
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"

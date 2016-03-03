@@ -28,19 +28,24 @@ fi
 # Allow core dumps
 ulimit -c unlimited
 
-# For Kudu
-PATH=$PATH:$HOME/src/kudu/thirdparty/clang-toolchain/bin
-PATH=$PATH:$HOME/src/kudu/thirdparty/installed/bin
-PATH=$HOME/.local/bin:$PATH # pip install --user
-PATH=$HOME/bin/llvm-system-bin:$PATH
-PATH=/usr/lib/ccache:$PATH
-PATH=$HOME/bin/ccache:$PATH  # My preferred ccache stuff.
+
+PATH=$HOME/applications/google_appengine:$PATH
+PATH="/usr/local/heroku/bin:$PATH"
+
+# For pip install --user.
+PATH=$HOME/.local/bin:$PATH
+
 
 # For bundler.
 if which ruby >/dev/null && which gem >/dev/null; then
   PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 fi
 
-PATH=$HOME/applications/google_appengine:$PATH
+# For Kudu
+PATH=$HOME/src/kudu/thirdparty/installed/bin:$PATH
+PATH=$HOME/bin/llvm-system-bin:$PATH
+PATH=$HOME/src/kudu/thirdparty/clang-toolchain/bin:$PATH
+PATH=/usr/lib/ccache:$PATH
+PATH=$HOME/bin/ccache:$PATH  # My preferred ccache stuff.
 
 export PATH
