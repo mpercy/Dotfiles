@@ -37,6 +37,10 @@ PATH="/usr/local/heroku/bin:$PATH"
 # For pip install --user.
 PATH=$HOME/.local/bin:$PATH
 
+# VTune.
+if [ -f "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh" ]; then
+  source "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh"
+fi
 
 # For bundler.
 if which ruby >/dev/null && which gem >/dev/null; then
