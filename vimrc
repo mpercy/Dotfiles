@@ -32,6 +32,9 @@ Plugin 'mpercy/ack.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'guns/xterm-color-table.vim'
 
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
 "Plugin 'flazz/vim-colorschemes'
@@ -44,6 +47,9 @@ Plugin 'mpercy/wombat256cpp2.vim'
 " go-lang support
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Plugin 'fatih/vim-go'
+
+" asciidoc syntax support
+Plugin 'asciidoc/vim-asciidoc'
 
 " menu maker thing should go last
 "Bundle 'ColorSchemeMenuMaker'
