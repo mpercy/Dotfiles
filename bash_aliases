@@ -111,10 +111,10 @@ kudu_run_cmake_func() {
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
         ;;
       ASAN)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1
         ;;
       ASANDEBUG)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 .
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 -DKUDU_LINK=static
         ;;
       TSAN)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
@@ -382,6 +382,7 @@ ntp_reset() {
 }
 
 alias gist='gist-paste -po'
+alias md='pandoc -f markdown_github -t html'
 
 alias bootstrap_vundle='[ ! -e ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && vim +PluginInstall +qall'
 
