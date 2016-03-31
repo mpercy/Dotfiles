@@ -28,6 +28,8 @@ fi
 # Allow core dumps
 ulimit -c unlimited
 
+# Workaround for Intellij input issue on IBus < 1.5.11: https://youtrack.jetbrains.com/issue/IDEA-78860
+export IBUS_ENABLE_SYNC_MODE=1
 
 PATH=$HOME/applications/google_appengine:$PATH
 PATH="/usr/local/heroku/bin:$PATH"
