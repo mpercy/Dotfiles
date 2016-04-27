@@ -39,7 +39,7 @@ PATH=$HOME/.local/bin:$PATH
 
 # VTune.
 if [ -f "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh" ]; then
-  source "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh"
+  source "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh" "quiet"
 fi
 
 # For bundler.

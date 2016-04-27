@@ -10,7 +10,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " github repos
 Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-unimpaired'
+"Plugin 'tpope/vim-unimpaired'
 if v:version >= 704
   Plugin 'Valloric/YouCompleteMe'
 endif
@@ -30,7 +30,7 @@ Plugin 'mpercy/ack.vim'
 "Plugin 'bling/vim-airline'
 "Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
 Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'guns/xterm-color-table.vim'
+"Plugin 'guns/xterm-color-table.vim'
 
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
@@ -38,9 +38,9 @@ Plugin 'plasticboy/vim-markdown'
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
 "Plugin 'flazz/vim-colorschemes'
-Plugin 'wesgibbs/vim-irblack'
+"Plugin 'wesgibbs/vim-irblack'
 "Plugin 'altercation/vim-colors-solarized' " looks terrible on console
-Plugin 'desert-warm-256'
+"Plugin 'desert-warm-256'
 "Plugin 'morhetz/gruvbox' " looks terrible on console
 Plugin 'mpercy/wombat256cpp2.vim'
 
@@ -80,6 +80,11 @@ filetype plugin indent on    " required
 " now?
 "runtime! plugin/sensible.vim
 
+" vim-markdown
+" from https://github.com/tpope/vim-markdown
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_fenced_languages = ['html', 'python', 'bash=sh', 'java', '\c++']
 
 if has('persistent_undo')
   set undofile
@@ -90,15 +95,13 @@ endif
 
 " Because <Esc> and <C-]> are hard to touch type.
 inoremap jk <esc>
+cnoremap jk <C-c><esc>
 " Train self not to use esc
 "Untrain... hard to switch back and forth now when using e.g. IntelliJ
 "inoremap <esc> ~
 
 " Need a better shortcut for :A
 noremap <silent> <C-a> :call AlternateFile("n")<CR>
-
-" Get rid of pathogen and just use Vundle.
-"execute pathogen#infect()
 
 syntax on
 set hidden
@@ -111,6 +114,7 @@ if v:version >= 704
 endif
 set hlsearch incsearch
 set splitright
+set lazyredraw " avoid redraw lag when scrolling through large files
 set viminfo='30,\"100,:20,%,n~/.viminfo
 
 " cw, dw etc should not include '.' in a word (super annoying)
@@ -123,7 +127,8 @@ set nojoinspaces
 set clipboard=unnamedplus
 
 " Great sudo trick from http://nvie.com/posts/how-i-boosted-my-vim/
-cmap w!! w !sudo tee % >/dev/null
+" This causes a delay after typing 'w' in command mode. Screw that.
+"cmap w!! w !sudo tee % >/dev/null
 
 "colors desert-warm-256
 "colors grb256
