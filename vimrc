@@ -33,7 +33,7 @@ Plugin 'ntpeters/vim-better-whitespace'
 "Plugin 'guns/xterm-color-table.vim'
 
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+Plugin 'mpercy/vim-markdown'
 
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
@@ -80,18 +80,22 @@ filetype plugin indent on    " required
 " now?
 "runtime! plugin/sensible.vim
 
-" vim-markdown
 " from https://github.com/tpope/vim-markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
+" vim-markdown
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_fenced_languages = ['html', 'python', 'bash=sh', 'java', '\c++']
+let g:vim_markdown_new_list_item_indent = 2
 
 if has('persistent_undo')
   set undofile
   set undodir=/home/mpercy/.vim/undo
 endif
 
-
+" CTRL-click should open links in my browser, not give me tag errors. Squelch.
+" NB: Have to use CTRL+] to follow Vim help links now, though.
+map <C-LeftMouse> <LeftMouse>
 
 " Because <Esc> and <C-]> are hard to touch type.
 inoremap jk <esc>
@@ -237,6 +241,7 @@ filetype plugin on
 " startup.
 let g:ycm_extra_conf_globlist = ['~/class/*',
                                 \'~/Documents/Personal/Stanford/*',
+                                \'~/src/breakpad/*',
                                 \'~/src/kudu/*',
                                 \'~/src/kudu-c++11/*',
                                 \'~/src/kudu-reviews/*',
