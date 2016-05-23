@@ -21,14 +21,12 @@ Plugin 'wincent/command-t'
 Plugin 'mpercy/a.vim'
 Plugin 'scrooloose/nerdtree'
 "Plugin 'tpope/vim-fugitive'
-"Plugin 'Lokaltog/powerline'
-"Plugin 'Lokaltog/powerline-fonts'
 "Plugin 'airblade/vim-gitgutter'
 Plugin 'mpercy/ack.vim'
 "Plugin 'rking/ag.vim'
 "Plugin 'bling/vim-bufferline'
-"Plugin 'bling/vim-airline'
 "Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'ntpeters/vim-better-whitespace'
 "Plugin 'guns/xterm-color-table.vim'
 
@@ -69,16 +67,14 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-" Install powerline
-"python from powerline.vim import setup as powerline_setup
-"python powerline_setup()
-"python del powerline_setup
-"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
-
-" Run sensible.vim right away, because it's annoying not to be able to
-" override what it sets easily otherwise. TODO: Does it run at vundle#end()
-" now?
-"runtime! plugin/sensible.vim
+" Run powerline
+python from powerline.vim import setup as powerline_setup
+python powerline_setup()
+python del powerline_setup
+" Always show statusline
+set laststatus=2
+" Use 256 colours (Use this setting only if your terminal supports 256 colours)
+set t_Co=256
 
 " from https://github.com/tpope/vim-markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -184,10 +180,11 @@ nmap <Leader>f :b
 "set laststatus=2 statusline=%02n:%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 
 " ctrl- mappings for window navigation
-map <C-k> <C-w><Up>
-map <C-j> <C-w><Down>
-map <C-l> <C-w><Right>
-map <C-h> <C-w><Left>
+" These are not needed with Chris Toomey's tmux navigator plugin
+"map <C-k> <C-w><Up>
+"map <C-j> <C-w><Down>
+"map <C-l> <C-w><Right>
+"map <C-h> <C-w><Left>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " From http://statico.github.io/vim.html
