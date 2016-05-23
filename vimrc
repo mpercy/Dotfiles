@@ -126,6 +126,9 @@ set nojoinspaces
 " Yank to X-windows keyboard in Vim 7.3.74 and above.
 set clipboard=unnamedplus
 
+" Don't clear the clipboard on exit. See http://stackoverflow.com/questions/6453595
+autocmd VimLeave * call system('xsel -ib', getreg('+'))
+
 " Great sudo trick from http://nvie.com/posts/how-i-boosted-my-vim/
 " This causes a delay after typing 'w' in command mode. Screw that.
 "cmap w!! w !sudo tee % >/dev/null
