@@ -20,13 +20,13 @@ Plugin 'wincent/command-t'
 "Plugin 'fs111/pydoc.vim'
 Plugin 'mpercy/a.vim'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'tpope/vim-fugitive'
-"Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'mpercy/ack.vim'
-"Plugin 'rking/ag.vim'
-"Plugin 'bling/vim-bufferline'
 "Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'ntpeters/vim-better-whitespace'
 "Plugin 'guns/xterm-color-table.vim'
 
@@ -161,6 +161,13 @@ nmap <F5> <ESC>:NERDTreeToggle<CR>
 " for YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>ji :YcmCompleter GoToImprecise<CR>
+nnoremap <leader>jh :YcmCompleter GoToInclude<CR>
+nnoremap <leader>yf :YcmCompleter FixIt<CR>
+nnoremap <leader>yd :YcmCompleter GetDoc<CR>
+nnoremap <leader>yp :YcmCompleter GetParent<CR>
+nnoremap <leader>yt :YcmCompleter GetType<CR>
+nnoremap <leader>ye :YcmDiags<CR>
+nnoremap <leader>yy :YcmShowDetailedDiagnostic<CR>
 
 " For C++: don't do extreme indent after block inside switch statement.
 " Also use 1 space indent on and 1 additional following public:, private:, etc.
