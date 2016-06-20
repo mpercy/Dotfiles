@@ -11,7 +11,7 @@ update_func() {
   BRANCH=$1
   if [[ -z "$BRANCH" ]]; then
     echo "Usage: update <branch>"
-    exit 1
+    return 1
   fi
   (
     set -x
