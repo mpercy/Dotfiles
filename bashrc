@@ -139,7 +139,7 @@ fi
 stty -ixon -ixoff
 
 # for Flume
-#export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
+export MAVEN_OPTS="-Xms512m"
 
 export EDITOR=vim
 
@@ -191,3 +191,6 @@ export ISOLATE_SERVER=http://isolate.cloudera.org:4242/
 if [ -d "/usr/lib/jvm/java-8-oracle" ]; then
   export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 fi
+
+# For Hadoop
+export HADOOP_PROTOC_PATH=$HOME/applications/protobuf-2.5.0/bin/protoc
