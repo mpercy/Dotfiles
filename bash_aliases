@@ -89,13 +89,12 @@ kudu_run_cmake_func() {
       return
     fi
 
-
     if [ -z "$NO_REBUILD_THIRDPARTY" ]; then
       $DEVTOOLSET ../../thirdparty/build-if-necessary.sh
     fi
 
     rm -Rf CMakeCache.txt CMakeFiles/
-    CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
+    CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DKUDU_FORCE_COLOR_DIAGNOSTICS=1"
     case $BUILD_TYPE in
       DYNDEBUG)
         $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
@@ -118,6 +117,9 @@ kudu_run_cmake_func() {
         ;;
       TSAN)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
+        ;;
+      COVERAGE)
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug -DKUDU_GENERATE_COVERAGE=1
         ;;
       CLIENT)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
@@ -173,6 +175,7 @@ alias kudu_cmake_dyn_clang='kudu_run_cmake_func DYNCLANG'
 alias kudu_cmake_clang='kudu_run_cmake_func CLANGDEBUG'
 alias kudu_cmake_asan='kudu_run_cmake_func ASAN'
 alias kudu_cmake_asandebug='kudu_run_cmake_func ASANDEBUG'
+alias kudu_cmake_coverage='kudu_run_cmake_func COVERAGE'
 alias kudu_cmake_tsan='kudu_run_cmake_func TSAN'
 alias kudu_cmake_client='kudu_run_cmake_func CLIENT'
 alias kudu_cmake_release='kudu_run_cmake_func RELEASE'
@@ -383,8 +386,27 @@ ntp_reset() {
 
 alias gist='gist-paste -po'
 alias md='pandoc -f markdown_github -t html'
+alias nm-restart='service network-manager restart'
 
 alias bootstrap_vundle='[ ! -e ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && vim +PluginInstall +qall'
+
+# For Flume contributors.
+git_reset_author() {
+  AUTHOR=$1
+  if [ -z "$AUTHOR" ]; then
+    echo "Error: Must specify author"
+    return
+  fi
+  set -ex
+  git commit --amend --no-edit --author="$AUTHOR"
+  git log -n1
+  set +ex
+}
+
+alias git_reset_author_lior='git_reset_author "Lior Zeno <liorzino@gmail.com>"'
+alias git_reset_author_denes='git_reset_author "Denes Arvay <denes@cloudera.com>"'
+alias git_reset_author_jholoman='git_reset_author "Jeff Holoman <jeff.holoman@gmail.com>"'
+alias git_reset_author_tinawenqiao='git_reset_author "wenqiao <315524513@qq.com>"'
 
 # TODO: shouldn't this get sourced by the shell automatically somehow anyway?
 . ~/.bash_completions
