@@ -15,7 +15,7 @@ if v:version >= 704
   Plugin 'Valloric/YouCompleteMe'
 endif
 "Plugin 'Lokaltog/vim-easymotion'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'wincent/command-t'
 "Plugin 'fs111/pydoc.vim'
 Plugin 'mpercy/a.vim'
@@ -31,7 +31,7 @@ Plugin 'ntpeters/vim-better-whitespace'
 "Plugin 'guns/xterm-color-table.vim'
 
 Plugin 'godlygeek/tabular'
-Plugin 'mpercy/vim-markdown'
+Plugin 'plasticboy/vim-markdown'
 
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
