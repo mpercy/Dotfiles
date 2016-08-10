@@ -159,7 +159,7 @@ kudu_make_and_test_func() {
 
 alias kudu_build='kudu_make_and_test_func DEBUG'
 alias kudu_build_dyn='kudu_make_and_test_func DYNDEBUG'
-alias kudu_build_dyn_clang='kudu_make_and_test_func DYNCLANG'
+alias kudu_build_dynclang='kudu_make_and_test_func DYNCLANG'
 alias kudu_build_clang='kudu_make_and_test_func CLANGDEBUG'
 alias kudu_build_asan='kudu_make_and_test_func ASAN'
 alias kudu_build_asandebug='kudu_make_and_test_func ASANDEBUG'
@@ -171,7 +171,7 @@ alias kudu_build_release='kudu_make_and_test_func RELEASE'
 
 alias kudu_cmake='kudu_run_cmake_func DEBUG'
 alias kudu_cmake_dyn='kudu_run_cmake_func DYNDEBUG'
-alias kudu_cmake_dyn_clang='kudu_run_cmake_func DYNCLANG'
+alias kudu_cmake_dynclang='kudu_run_cmake_func DYNCLANG'
 alias kudu_cmake_clang='kudu_run_cmake_func CLANGDEBUG'
 alias kudu_cmake_asan='kudu_run_cmake_func ASAN'
 alias kudu_cmake_asandebug='kudu_run_cmake_func ASANDEBUG'
