@@ -1,0 +1,43 @@
+set nocompatible
+
+" Because <Esc> and <C-]> are hard to touch type.
+inoremap jk <esc>
+" Train self not to use esc
+"Untrain... hard to switch back and forth now when using e.g. IntelliJ
+"inoremap <esc> ~
+
+syntax on
+set hidden
+set nu ruler ai ts=8 sts=2 sw=2 sr expandtab
+set hlsearch incsearch
+set splitright
+set viminfo='30,\"100,:20,%,n~/.viminfo
+
+" cw, dw etc should not include '.' in a word (super annoying)
+set iskeyword+=^,,^-,^.
+
+" No double spacing after periods when joining lines or reformatting.
+set nojoinspaces
+
+" Yank to X-windows keyboard in Vim 7.3.74 and above.
+set clipboard=unnamedplus
+
+set cursorline
+
+let mapleader=","
+
+nmap <silent> <Leader>/ :nohlsearch<CR>
+set pastetoggle=<F2>
+
+" For C++: don't do extreme indent after block inside switch statement.
+" Also use 1 space indent on and 1 additional following public:, private:, etc.
+set cinoptions=l1,g2,h1
+
+" ctrl- mappings for window navigation
+map <C-k> <C-w><Up>
+map <C-j> <C-w><Down>
+map <C-l> <C-w><Right>
+map <C-h> <C-w><Left>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set wildignore+=*.o,*.class,build/**,**/CMakeFiles/**,thirdparty/**,logs/*,**/target/**
