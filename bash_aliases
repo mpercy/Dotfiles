@@ -386,7 +386,8 @@ ntp_reset() {
 
 alias gist='gist-paste -po'
 alias md='pandoc -f markdown_github -t html'
-alias nm-restart='service network-manager restart'
+alias nm-restart='sudo service network-manager restart'
+alias bt-restart='sudo service bluetooth restart'
 
 alias bootstrap_vundle='[ ! -e ~/.vim/bundle/Vundle.vim ] && git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && vim +PluginInstall +qall'
 
