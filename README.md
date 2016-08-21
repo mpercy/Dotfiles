@@ -2,7 +2,7 @@
 
 ## Mike Percy's dot files
 
-To install:
+To install the dot files:
 
 ```bash
 git clone https://github.com/mpercy/Dotfiles.git ~/Dotfiles
@@ -10,7 +10,14 @@ pip install --user dotfiles # see https://pypi.python.org/pypi/dotfiles
 dotfiles --sync
 ```
 
-For Vim:
+For tmux:
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+~/.tmux/plugins/tpm/bin/install_plugins
+```
+
+For vim:
 
 ```bash
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
