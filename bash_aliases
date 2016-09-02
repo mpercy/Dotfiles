@@ -409,6 +409,8 @@ alias git_reset_author_denes='git_reset_author "Denes Arvay <denes@cloudera.com>
 alias git_reset_author_donat='git_reset_author "Bessenyei Balázs Donát <bessbd@cloudera.com>"'
 alias git_reset_author_jholoman='git_reset_author "Jeff Holoman <jeff.holoman@gmail.com>"'
 alias git_reset_author_tinawenqiao='git_reset_author "wenqiao <315524513@qq.com>"'
+alias git_reset_author_granthenke='git_reset_author "Grant Henke <granthenke@gmail.com>"'
+alias git_reset_author_sati='git_reset_author "Attila Simon <sati@cloudera.com>"'
 
 # TODO: shouldn't this get sourced by the shell automatically somehow anyway?
 . ~/.bash_completions
