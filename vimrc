@@ -24,17 +24,18 @@ Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'mpercy/ack.vim'
-"Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
+Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'ntpeters/vim-better-whitespace'
-"Plugin 'guns/xterm-color-table.vim'
+"Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
 
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
+"Plugin 'guns/xterm-color-table.vim'
 "Plugin 'flazz/vim-colorschemes'
 "Plugin 'wesgibbs/vim-irblack'
 "Plugin 'altercation/vim-colors-solarized' " looks terrible on console
