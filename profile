@@ -55,3 +55,9 @@ PATH=/usr/lib/ccache:$PATH
 PATH=$HOME/bin/ccache:$PATH  # My preferred ccache stuff.
 
 export PATH
+
+LOCAL_PROFILE=$HOME/.profile.local
+if [ -f $LOCAL_PROFILE ]; then
+  source $LOCAL_PROFILE
+fi
+unset LOCAL_PROFILE
