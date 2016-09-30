@@ -26,7 +26,7 @@ alias update=update_func
 
 export LLVM_SYMBOLIZER=/home/mpercy/src/kudu/thirdparty/clang-toolchain/bin/llvm-symbolizer
 export DEVTOOLSET='../../build-support/enable_devtoolset.sh'
-export CMAKE='../../thirdparty/installed/bin/cmake'
+export CMAKE='../../thirdparty/installed/common/bin/cmake'
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 export NUM_PROCS_MINUS_ONE=$(expr $NUM_PROCS - 1)
 

@@ -48,7 +48,7 @@ if which ruby >/dev/null && which gem >/dev/null; then
 fi
 
 # For Kudu
-PATH=$HOME/src/kudu/thirdparty/installed/bin:$PATH
+PATH=$HOME/src/kudu/thirdparty/installed/common/bin:$PATH
 PATH=$HOME/bin/llvm-system-bin:$PATH
 PATH=$HOME/src/kudu/thirdparty/clang-toolchain/bin:$PATH
 PATH=/usr/lib/ccache:$PATH
