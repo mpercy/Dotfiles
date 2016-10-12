@@ -139,7 +139,7 @@ fi
 stty -ixon -ixoff
 
 # for Flume
-export MAVEN_OPTS="-Xms512m"
+export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m"
 
 export EDITOR=vim
 
@@ -188,7 +188,9 @@ export DIST_TEST_MASTER=http://dist-test.cloudera.org
 export ISOLATE_SERVER=http://isolate.cloudera.org:4242/
 
 # For Impala
-if [ -d "/usr/lib/jvm/java-8-oracle" ]; then
+if [ -d "/usr/lib/jvm/java-7-oracle" ]; then
+  export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+elif [ -d "/usr/lib/jvm/java-8-oracle" ]; then
   export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 fi
 
