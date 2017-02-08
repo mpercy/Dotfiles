@@ -373,18 +373,16 @@ rebase_updated_master() {
   )
 }
 
-ntp_reset() {
-  set -e
-  sudo service ntp stop
-  NTP_SERVER="$(grep ^server /etc/ntp.conf | head -1 | awk '{print $2}')"
-  echo "Hard resetting clock from NTP server ${NTP_SERVER}..."
+do_ntp_reset() {
+  NTP_SERVER=pool.ntp.org
   set -x
-  sudo ntpdate "$NTP_SERVER"
+  sudo service ntp stop || return
+  sudo ntpdate "$NTP_SERVER" || return
+  sudo service ntp start || return
   set +x
-  sudo service ntp start
-  set +e
 }
 
+alias ntp-reset=do_ntp_reset
 alias gist='gist-paste -po'
 alias md='pandoc -f markdown_github -t html'
 alias nm-restart='sudo service network-manager restart'
