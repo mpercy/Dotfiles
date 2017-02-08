@@ -29,6 +29,7 @@ export DEVTOOLSET='../../build-support/enable_devtoolset.sh'
 export CMAKE='../../thirdparty/installed/common/bin/cmake'
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 export NUM_PROCS_MINUS_ONE=$(expr $NUM_PROCS - 1)
+export CMAKE_GENERATOR=${CMAKE_GENERATOR:-Ninja}
 
 kudu_gerrit_submit_branch() {
   (
@@ -97,35 +98,35 @@ kudu_run_cmake_func() {
     CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DKUDU_FORCE_COLOR_DIAGNOSTICS=1"
     case $BUILD_TYPE in
       DYNDEBUG)
-        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
         ;;
       DEBUG)
-        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
+        $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       CLANGDEBUG)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=static -DCMAKE_BUILD_TYPE=debug
         ;;
       DYNCLANG)
         # Probably the fastest build method.
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
         ;;
       ASAN)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1
         ;;
       ASANDEBUG)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 -DKUDU_LINK=static
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 -DKUDU_LINK=static
         ;;
       TSAN)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
         ;;
       COVERAGE)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug -DKUDU_GENERATE_COVERAGE=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug -DKUDU_GENERATE_COVERAGE=1
         ;;
       CLIENT)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
         ;;
       RELEASE|HEAPCHECK)
-        $DEVTOOLSET $CMAKE ../.. -G Ninja $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
+        $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
         ;;
     esac
     $DEVTOOLSET ninja clean
