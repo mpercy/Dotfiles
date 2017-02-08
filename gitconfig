@@ -40,3 +40,5 @@
 
 [push]
   default = current
+[http]
+	cookiefile = /home/mpercy/.gitcookies
