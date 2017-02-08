@@ -31,6 +31,8 @@ ulimit -c unlimited
 # Workaround for Intellij input issue on IBus < 1.5.11: https://youtrack.jetbrains.com/issue/IDEA-78860
 export IBUS_ENABLE_SYNC_MODE=1
 
+export GPGKEY=66F2054B
+
 PATH=$HOME/applications/google_appengine:$PATH
 PATH="/usr/local/heroku/bin:$PATH"
 
