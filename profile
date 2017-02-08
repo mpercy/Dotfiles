@@ -61,6 +61,7 @@ PATH=$HOME/bin/ccache:$PATH  # My preferred ccache stuff.
 
 export PATH
 
+# Allow for a local .profile
 LOCAL_PROFILE=$HOME/.profile.local
 if [ -f $LOCAL_PROFILE ]; then
   source $LOCAL_PROFILE

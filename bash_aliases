@@ -1,5 +1,12 @@
 # .bash_aliases
 
+# Allow for a local .bash_aliases
+LOCAL_BASH_ALIASES=$HOME/.bash_aliases.local
+if [ -f $LOCAL_BASH_ALIASES ]; then
+  source $LOCAL_BASH_ALIASES
+fi
+unset LOCAL_BASH_ALIASES
+
 # emacs
 alias e='emacs -nw'
 
@@ -30,6 +37,7 @@ export CMAKE='../../thirdparty/installed/common/bin/cmake'
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 export NUM_PROCS_MINUS_ONE=$(expr $NUM_PROCS - 1)
 export CMAKE_GENERATOR=${CMAKE_GENERATOR:-Ninja}
+export CMAKE_MAKE_PROG=${CMAKE_MAKE_PROG:-ninja}
 
 kudu_gerrit_submit_branch() {
   (
@@ -95,7 +103,7 @@ kudu_run_cmake_func() {
     fi
 
     rm -Rf CMakeCache.txt CMakeFiles/
-    CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DKUDU_FORCE_COLOR_DIAGNOSTICS=1"
+    CMAKE_OPTS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DKUDU_FORCE_COLOR_DIAGNOSTICS=1 $CMAKE_OPTS"
     case $BUILD_TYPE in
       DYNDEBUG)
         $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug
@@ -129,7 +137,7 @@ kudu_run_cmake_func() {
         $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=release
         ;;
     esac
-    $DEVTOOLSET ninja clean
+    $DEVTOOLSET $CMAKE_MAKE_PROG clean
   )
 }
 
@@ -147,7 +155,7 @@ kudu_build_func() {
   &&
   kudu_run_cmake_func $BUILD_TYPE \
   && date \
-  && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS
+  && time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS
 }
 
 kudu_make_and_test_func() {
@@ -181,8 +189,8 @@ alias kudu_cmake_tsan='kudu_run_cmake_func TSAN'
 alias kudu_cmake_client='kudu_run_cmake_func CLIENT'
 alias kudu_cmake_release='kudu_run_cmake_func RELEASE'
 
-alias kbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "kbt exited with return code=$?"'
-alias skbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "skbt exited with return code=$?"'
+alias kbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "kbt exited with return code=$?"'
+alias skbt='rm -rf /tmp/kudutest-1000 && date && time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS && ( export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; unset GLOG_colorlogtostderr; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "skbt exited with return code=$?"'
 #alias hkbt='rm -rf /tmp/kudutest-1000 && kudu_build_func HEAPCHECK && ( export HEAPCHECK=normal; export KUDU_ALLOW_SLOW_TESTS=1; export TSAN_OPTIONS="$TSAN_OPTIONS second_deadlock_stack=1 suppressions=$(pwd)/build-support/tsan-suppressions.txt history_size=7 external_symbolizer_path=$LLVM_SYMBOLIZER"; date; time ctest -j${NUM_PROCS_MINUS_ONE}); alert "hkbt exited with return code=$?"'
 
 ktt_func() {
@@ -236,7 +244,7 @@ kbtt_func() {
   (
     date
     set -ex
-    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $1
+    time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $1
     set +ex
     date
     ktt_func $*
@@ -253,7 +261,7 @@ cbtt_func() {
     unset GLOG_colorlogtostderr # avoid ANSI color garbage in the logs
     date
     set -x
-    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME || return $?
+    time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME || return $?
     date
     time ../../build-support/run-test.sh ./bin/$TESTNAME $@
     RETCODE=$?
@@ -308,7 +316,7 @@ gdbtt_func() {
     date
     set -e
     set -x
-    time $DEVTOOLSET ninja -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME
+    time $DEVTOOLSET $CMAKE_MAKE_PROG -j${NUM_PROCS_MINUS_ONE} $NINJA_OPTS $TESTNAME
     date
     GDB=$(which gdb)
     eval "$GDB $LOCAL_GDB_ARGS --args ./bin/$TESTNAME --gtest_break_on_failure $*"
@@ -330,7 +338,7 @@ klog_func() {
   )
 }
 
-alias kbf="$DEVTOOLSET ninja -j12 $NINJA_OPTS" # kudu-build-fast
+alias kbf="$DEVTOOLSET $CMAKE_MAKE_PROG -j12 $NINJA_OPTS" # kudu-build-fast
 alias ktt=ktt_func
 alias sktt=sktt_func
 alias hktt=hktt_func
@@ -349,7 +357,7 @@ alias kudu_buildinfo="egrep 'CMAKE_BUILD_TYPE|KUDU_USE_' CMakeCache.txt | perl -
 alias klog=klog_func
 alias heapcheck='set -x; export HEAPCHECK=normal; export LD_BIND_NOW=1; set +x'
 
-alias n="$DEVTOOLSET ninja"
+alias n="$DEVTOOLSET $CMAKE_MAKE_PROG"
 alias cls='printf "\033c"'
 
 alias pyhttpd='python -m SimpleHTTPServer'

@@ -196,3 +196,10 @@ fi
 
 # For Hadoop
 export HADOOP_PROTOC_PATH=$HOME/applications/protobuf-2.5.0/bin/protoc
+
+# Allow for a local .bashrc
+LOCAL_BASHRC=$HOME/.bashrc.local
+if [ -f $LOCAL_BASHRC ]; then
+  source $LOCAL_BASHRC
+fi
+unset LOCAL_BASHRC
