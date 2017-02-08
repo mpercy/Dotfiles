@@ -7,6 +7,9 @@ if [ -r /etc/bash_completion.d/ninja ]; then
 elif [ -r $HOME/src/ninja/misc/bash-completion ]; then
   . $HOME/src/ninja/misc/bash-completion
   HAS_COMPLETIONS=1
+elif [ -r /usr/local/etc/bash_completion.d/ninja ]; then
+  . /usr/local/etc/bash_completion.d/ninja
+  HAS_COMPLETIONS=1
 fi
 if [ -n "$HAS_COMPLETIONS" ]; then
   complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog

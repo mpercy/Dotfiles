@@ -88,6 +88,8 @@ kudu_gerrit_submit_current_branch() {
 # kudu aliases
 alias gerrit_submit=kudu_gerrit_submit
 alias gerrit_submit_current_branch=kudu_gerrit_submit_current_branch
+alias toolset-ninja='export CMAKE_GENERATOR=Ninja; export CMAKE_MAKE_PROG=ninja'
+alias toolset-xcode='export CMAKE_GENERATOR=Xcode; export CMAKE_MAKE_PROG=xcodebuild'
 
 kudu_run_cmake_func() {
   (
@@ -338,7 +340,7 @@ klog_func() {
   )
 }
 
-alias kbf="$DEVTOOLSET $CMAKE_MAKE_PROG -j12 $NINJA_OPTS" # kudu-build-fast
+alias kbf='$DEVTOOLSET $CMAKE_MAKE_PROG -j12 $NINJA_OPTS' # kudu-build-fast
 alias ktt=ktt_func
 alias sktt=sktt_func
 alias hktt=hktt_func
@@ -357,7 +359,7 @@ alias kudu_buildinfo="egrep 'CMAKE_BUILD_TYPE|KUDU_USE_' CMakeCache.txt | perl -
 alias klog=klog_func
 alias heapcheck='set -x; export HEAPCHECK=normal; export LD_BIND_NOW=1; set +x'
 
-alias n="$DEVTOOLSET $CMAKE_MAKE_PROG"
+alias n='$DEVTOOLSET $CMAKE_MAKE_PROG'
 alias cls='printf "\033c"'
 
 alias pyhttpd='python -m SimpleHTTPServer'
