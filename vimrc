@@ -24,7 +24,7 @@ Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'mpercy/ack.vim'
-Plugin 'airblade/vim-gitgutter'
+"Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'ntpeters/vim-better-whitespace'
@@ -208,14 +208,14 @@ nmap <Leader>f :b
 :let g:ctrlp_dotfiles = 0
 :let g:ctrlp_switch_buffer = 0
 
-set wildignore+=*.o,*.class,build/**,**/CMakeFiles/**,thirdparty/**,logs/*,**/target/**
+set wildignore+=*.o,*.class
 
 " CommandT
 let g:CommandTMatchWindowAtTop = 1
 let g:CommandTMaxFiles = 50000
 let g:CommandTMaxCachedDirectories = 10000
 let g:CommandTFileScanner = 'git'
-let g:CommandTWildIgnore=&wildignore
+let g:CommandTWildIgnore=&wildignore . ",build/**,thirdparty/src/**,thirdparty/build/**,logs/**,**/target/**,**/CMakeFiles/**"
 
 " airline
 "let g:airline#extensions#tabline#enabled = 1
@@ -250,6 +250,7 @@ filetype plugin on
 let g:ycm_extra_conf_globlist = ['~/class/*',
                                 \'~/Documents/Personal/Stanford/*',
                                 \'~/src/breakpad/*',
+                                \'~/src/glog/*',
                                 \'~/src/kudu/*',
                                 \'~/src/kudu-c++11/*',
                                 \'~/src/kudu-reviews/*',
