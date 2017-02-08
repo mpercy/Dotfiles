@@ -49,6 +49,9 @@ if which ruby >/dev/null && which gem >/dev/null; then
   PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 fi
 
+# For Chromium and breakpad
+PATH=$HOME/src/depot_tools:$PATH
+
 # For Kudu
 PATH=$HOME/src/kudu/thirdparty/installed/common/bin:$PATH
 PATH=$HOME/bin/llvm-system-bin:$PATH
