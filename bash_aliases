@@ -369,19 +369,27 @@ alias tl="vim ~/todo-list.txt"
 alias backup_homedir="mountpoint /media/mpercy/mpercy-backup && rsync -avz /home/mpercy /media/mpercy/mpercy-backup/root/home/"
 
 # Rebase current git branch on master.
-rebase_updated_master() {
+rebase_updated_branch() {
+  local base_branch=$1
   (
+  if [ -z "$base_branch" ]; then
+    echo "Error: Must specify a branch to rebase onto"
+    return 1
+  fi
   set -xe
-  if branch=$(git symbolic-ref --short -q HEAD); then
-    update master
-    git checkout $branch
-    git rebase master
+  if cur_branch=$(git symbolic-ref --short -q HEAD); then
+    update $base_branch
+    git checkout $cur_branch
+    git rebase $base_branch
   else
-    echo not on any branch
+    echo "Error: Not currently on any branch"
     return 1
   fi
   )
 }
+
+alias rebase_updated_master='rebase_updated_branch master'
+alias rebase_updated_trunk='rebase_updated_branch trunk'
 
 do_ntp_reset() {
   NTP_SERVER=pool.ntp.org
