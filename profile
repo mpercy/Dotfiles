@@ -16,6 +16,9 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+# Newer go-lang.
+export PATH=/usr/lib/go-1.10/bin:$PATH
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -31,7 +34,10 @@ ulimit -c unlimited
 # Workaround for Intellij input issue on IBus < 1.5.11: https://youtrack.jetbrains.com/issue/IDEA-78860
 export IBUS_ENABLE_SYNC_MODE=1
 
+# Try to get the gpg agent to work.
 export GPGKEY=66F2054B
+export GPG_TTY=$(tty)
+export GPG_AGENT_INFO
 
 PATH=$HOME/applications/google_appengine:$PATH
 PATH="/usr/local/heroku/bin:$PATH"
@@ -39,18 +45,23 @@ PATH="/usr/local/heroku/bin:$PATH"
 # For pip install --user.
 PATH=$HOME/.local/bin:$PATH
 
+# For bpftrace
+PATH=$HOME/applications/bpftrace/bin:$PATH
+export MANPATH=$MANPATH:$HOME/applications/bpftrace/man
+
 # VTune.
 if [ -f "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh" ]; then
   source "/opt/intel/vtune_amplifier_xe/amplxe-vars.sh" "quiet"
 fi
 
 # For bundler.
-if which ruby >/dev/null && which gem >/dev/null; then
-  PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
-fi
+# TODO: FIXME: bionic barfing on this?
+#if which ruby >/dev/null && which gem >/dev/null; then
+#  PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+#fi
 
 # For Chromium and breakpad
-PATH=$HOME/src/depot_tools:$PATH
+#PATH=$HOME/src/depot_tools:$PATH
 
 # For Kudu
 PATH=$HOME/src/kudu/thirdparty/installed/common/bin:$PATH
