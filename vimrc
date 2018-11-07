@@ -20,6 +20,7 @@ Plugin 'wincent/command-t'
 "Plugin 'fs111/pydoc.vim'
 Plugin 'mpercy/a.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
@@ -32,6 +33,9 @@ Plugin 'ntpeters/vim-better-whitespace'
 
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'vim-scripts/mayansmoke'
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'derekwyatt/vim-scala'
 
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
@@ -69,9 +73,12 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 " Run powerline
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
+if has('python3')
+  set rtp+=~/.local/lib/python3.6/site-packages/powerline/bindings/vim
+  python3 from powerline.vim import setup as powerline_setup
+  python3 powerline_setup()
+  python3 del powerline_setup
+endif
 " Always show statusline
 set laststatus=2
 " Use 256 colours (Use this setting only if your terminal supports 256 colours)
@@ -118,8 +125,8 @@ set splitright
 set lazyredraw " avoid redraw lag when scrolling through large files
 set viminfo='30,\"100,:20,%,n~/.viminfo
 
-" cw, dw etc should not include '.' in a word (super annoying)
-set iskeyword+=^,,^-,^.
+" cw, dw, *, etc should not include '.' or ':' in a word (super annoying)
+set iskeyword+=^,,^-,^.,^:
 
 " No double spacing after periods when joining lines or reformatting.
 set nojoinspaces
@@ -136,6 +143,10 @@ autocmd VimLeave * call system('xsel -ib', getreg('+'))
 
 "colors desert-warm-256
 "colors grb256
+
+"set background=light
+set background=dark
+"colors PaperColor
 colors wombat256cpp2
 
 set cursorline
@@ -174,6 +185,19 @@ nnoremap <leader>yy :YcmShowDetailedDiagnostic<CR>
 " Also use 1 space indent on and 1 additional following public:, private:, etc.
 set cinoptions=l1,g2,h1
 
+" Window resizing shortcuts (mnemonic: horizontal, vertical split resizing).
+nnoremap <Leader>h- :resize -20<CR>
+nnoremap <Leader>h+ :resize +20<CR>
+nnoremap <Leader>h= :resize +20<CR>
+nnoremap <Leader>v- :vertical resize -20<CR>
+nnoremap <Leader>v+ :vertical resize +20<CR>
+nnoremap <Leader>v= :vertical resize +20<CR>
+
+" Avoid awkward <C-w> keystroke (mnemonic: window).
+nnoremap <Leader>w= <C-w>=<CR>
+nnoremap <Leader>w_ <C-w>_<CR>
+nnoremap <Leader>w\| <C-w>\|<CR>
+
 """""""""""""""""""""""""""""""""""""""""""
 "" From http://stackoverflow.com/questions/327411/how-do-you-prefer-to-switch-between-buffers-in-vim
 """"""""""""""""""""""""""""""""""""
@@ -211,6 +235,7 @@ nmap <Leader>f :b
 set wildignore+=*.o,*.class
 
 " CommandT
+let g:CommandTRefreshMap = '<C-t>'
 let g:CommandTMatchWindowAtTop = 1
 let g:CommandTMaxFiles = 50000
 let g:CommandTMaxCachedDirectories = 10000
@@ -250,6 +275,7 @@ filetype plugin on
 let g:ycm_extra_conf_globlist = ['~/class/*',
                                 \'~/Documents/Personal/Stanford/*',
                                 \'~/src/breakpad/*',
+                                \'~/src/glibc/*',
                                 \'~/src/glog/*',
                                 \'~/src/kudu/*',
                                 \'~/src/kudu-c++11/*',
@@ -265,6 +291,8 @@ let g:ycm_extra_conf_globlist = ['~/class/*',
                                 \'~/src/test/c++/*',
                                 \'~/src/pstack/*',
                                 \'~/src/binutils-gdb/*',
+                                \'~/src/offmarket/*',
+                                \'~/src/navencrypt/*',
                                 \'~/src/gg_kudu_user_exit/*']
 " YCM errors to jump thru with :lnext and :lprevious
 let g:ycm_always_populate_location_list = 1
