@@ -100,7 +100,7 @@ alias l='ls -CF'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 if which notify-send > /dev/null 2>&1; then
-  alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+  alias alert='notify-send --urgency=critical -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 else
   alias alert=echo
 fi
@@ -139,7 +139,7 @@ fi
 stty -ixon -ixoff
 
 # for Flume
-export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m"
+export MAVEN_OPTS="-Xms512m -Xmx1024m"
 
 export EDITOR=vim
 
@@ -188,11 +188,11 @@ export DIST_TEST_MASTER=http://dist-test.cloudera.org
 export ISOLATE_SERVER=http://isolate.cloudera.org:4242/
 
 # For Impala
-if [ -d "/usr/lib/jvm/java-7-oracle" ]; then
-  export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-elif [ -d "/usr/lib/jvm/java-8-oracle" ]; then
-  export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-fi
+#if [ -d "/usr/lib/jvm/java-7-oracle" ]; then
+#  export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+#elif [ -d "/usr/lib/jvm/java-8-oracle" ]; then
+#  export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+#fi
 
 # For Hadoop
 export HADOOP_PROTOC_PATH=$HOME/applications/protobuf-2.5.0/bin/protoc
