@@ -20,13 +20,14 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 For vim:
 
 ```bash
+pip install --user powerline-status
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
 # For YCM
 cd ~/.vim/bundle/YouCompleteMe
 ./install.py --clang-completer
 # For Command-T
-cd ~/.vim/bundle/command-t/ruby/command-t
+cd ~/.vim/bundle/command-t/ruby/command-t/ext/command-t
 ruby extconf.rb
 make
 ```
