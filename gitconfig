@@ -4,7 +4,6 @@
 
 [diff]
   guitool = meld
-  #guitool = kompare
   tool = sdiff
 
 [difftool "sdiff"]
@@ -16,29 +15,31 @@
  diff = auto
  status = auto
 [color "branch"]
- current = yellow bold
- local = yellow
+ current = red
+ local = blue
  remote = green
 [color "diff"]
  meta = yellow bold
- frag = magenta bold
+ frag = blue
  old = red
  new = green
 [color "status"]
- added = yellow
+ added = blue
  changed = green
- untracked = cyan
+ untracked = magenta
 
 [alias]
   dt = difftool -g -d
   vimdiff = difftool -d
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n15
-  lgs = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n5 --stat
+  lgo = log --graph --pretty=format:'%h %d %s - %an (%ci)'
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(blue)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n15
+  lgs = log --graph --pretty=format:'%Cred%h%Creset -%C(blue)%d%Creset %s - %an %Cgreen(%cr)%Creset' -n5 --stat
   stat = status --untracked-files=no
-  br = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset)   %(color:yellow)%(refname:short)%(color:reset)\t  %(contents:subject) - %(authorname) %(color:green)(%(committerdate:relative))%(color:reset)'
- oldest-ancestor = !bash -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+  br = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset)   %(color:blue)%(refname:short)%(color:reset)\t  %(contents:subject) - %(authorname) %(color:green)(%(committerdate:relative))%(color:reset)'
+  bro = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(objectname:short)   %(refname:short)\t  %(contents:subject) - %(authorname) (%(committerdate:rfc))'
+  oldest-ancestor = !bash -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 
 [push]
   default = current
 [http]
-	cookiefile = /home/mpercy/.gitcookies
+  cookiefile = /home/mpercy/.gitcookies
