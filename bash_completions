@@ -1,7 +1,9 @@
 #. /usr/share/bash-completion/completions/make
 #complete -F _make ktt sktt hktt kbtt skbtt hkbtt gdbtt tsgdbtt klog
 HAS_COMPLETIONS=''
-if [ -r /etc/bash_completion.d/ninja ]; then
+if complete -p | grep _ninja_target >/dev/null 2>&1; then
+  HAS_COMPLETIONS=1
+elif [ -r /etc/bash_completion.d/ninja ]; then
   . /etc/bash_completion.d/ninja
   HAS_COMPLETIONS=1
 elif [ -r $HOME/src/ninja/misc/bash-completion ]; then
