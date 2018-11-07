@@ -88,6 +88,7 @@ kudu_gerrit_submit_current_branch() {
 # kudu aliases
 alias gerrit_submit=kudu_gerrit_submit
 alias gerrit_submit_current_branch=kudu_gerrit_submit_current_branch
+alias gerrit_submit_branch=kudu_gerrit_submit_branch
 alias toolset-ninja='export CMAKE_GENERATOR=Ninja; export CMAKE_MAKE_PROG=ninja'
 alias toolset-xcode='export CMAKE_GENERATOR=Xcode; export CMAKE_MAKE_PROG=xcodebuild'
 
@@ -121,13 +122,16 @@ kudu_run_cmake_func() {
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug
         ;;
       ASAN)
-        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_ASAN=1
         ;;
       ASANDEBUG)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_ASAN=1 -DKUDU_USE_UBSAN=1 -DKUDU_LINK=static
         ;;
       TSAN)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=fastdebug -DKUDU_USE_TSAN=1
+        ;;
+      TSANDEBUG)
+        CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DCMAKE_BUILD_TYPE=debug -DKUDU_USE_TSAN=1
         ;;
       COVERAGE)
         CC=clang CXX=clang++ $DEVTOOLSET $CMAKE ../.. -G $CMAKE_GENERATOR $CMAKE_OPTS -DKUDU_LINK=dynamic -DCMAKE_BUILD_TYPE=debug -DKUDU_GENERATE_COVERAGE=1
@@ -175,6 +179,7 @@ alias kudu_build_clang='kudu_make_and_test_func CLANGDEBUG'
 alias kudu_build_asan='kudu_make_and_test_func ASAN'
 alias kudu_build_asandebug='kudu_make_and_test_func ASANDEBUG'
 alias kudu_build_tsan='kudu_make_and_test_func TSAN'
+alias kudu_build_tsandebug='kudu_make_and_test_func TSANDEBUG'
 alias kudu_build_client='kudu_make_and_test_func CLIENT'
 alias kudu_build_coverage='kudu_make_and_test_func COVERAGE; (set -x; lcov --capture --directory src --output-file coverage.info && genhtml coverage.info --output-directory out)'
 alias kudu_build_heapcheck='kudu_make_and_test_func HEAPCHECK'
@@ -188,6 +193,7 @@ alias kudu_cmake_asan='kudu_run_cmake_func ASAN'
 alias kudu_cmake_asandebug='kudu_run_cmake_func ASANDEBUG'
 alias kudu_cmake_coverage='kudu_run_cmake_func COVERAGE'
 alias kudu_cmake_tsan='kudu_run_cmake_func TSAN'
+alias kudu_cmake_tsandebug='kudu_run_cmake_func TSANDEBUG'
 alias kudu_cmake_client='kudu_run_cmake_func CLIENT'
 alias kudu_cmake_release='kudu_run_cmake_func RELEASE'
 
@@ -308,7 +314,6 @@ gdbtt_func() {
   fi
   (
     export KUDU_ALLOW_SLOW_TESTS=1
-    export HEAPCHECK=normal
     export ASAN_OPTIONS=abort_on_error=1
     TESTNAME=$1
     echo "KUDU_ALLOW_SLOW_TESTS=$KUDU_ALLOW_SLOW_TESTS"
