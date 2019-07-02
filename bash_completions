@@ -1,19 +1,15 @@
-#. /usr/share/bash-completion/completions/make
-#complete -F _make ktt sktt hktt kbtt skbtt hkbtt gdbtt tsgdbtt klog
-HAS_COMPLETIONS=''
-if complete -p | grep _ninja_target >/dev/null 2>&1; then
-  HAS_COMPLETIONS=1
+# bash completions
+if [ -r /usr/share/bash-completion/completions/ninja ]; then
+  # TODO(mpercy): why would this not be automatically included by the distro?
+  . /usr/share/bash-completion/completions/ninja
 elif [ -r /etc/bash_completion.d/ninja ]; then
   . /etc/bash_completion.d/ninja
-  HAS_COMPLETIONS=1
 elif [ -r $HOME/src/ninja/misc/bash-completion ]; then
   . $HOME/src/ninja/misc/bash-completion
-  HAS_COMPLETIONS=1
 elif [ -r /usr/local/etc/bash_completion.d/ninja ]; then
   . /usr/local/etc/bash_completion.d/ninja
-  HAS_COMPLETIONS=1
 fi
-if [ -n "$HAS_COMPLETIONS" ]; then
+
+if complete -p | grep -q _ninja_target; then
   complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog
 fi
-unset HAS_COMPLETIONS
