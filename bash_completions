@@ -1,4 +1,5 @@
 # bash completions
+# Ninja
 if [ -r /usr/share/bash-completion/completions/ninja ]; then
   # TODO(mpercy): why would this not be automatically included by the distro?
   . /usr/share/bash-completion/completions/ninja
@@ -8,8 +9,17 @@ elif [ -r $HOME/src/ninja/misc/bash-completion ]; then
   . $HOME/src/ninja/misc/bash-completion
 elif [ -r /usr/local/etc/bash_completion.d/ninja ]; then
   . /usr/local/etc/bash_completion.d/ninja
+elif [ -r ~/.brew/etc/bash_completion.d/ninja-completion.sh ]; then
+  . ~/.brew/etc/bash_completion.d/ninja-completion.sh
 fi
 
+# Ninja for Kudu
 if complete -p | grep -q _ninja_target; then
   complete -F _ninja_target n ktt sktt hktt kbtt cbtt scbtt skbtt hkbtt gdbtt tsgdbtt klog
+fi
+
+# Git
+#
+if [ -r ~/.brew/etc/bash_completion.d/git-completion.bash ]; then
+  . ~/.brew/etc/bash_completion.d/git-completion.bash
 fi
