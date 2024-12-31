@@ -6,7 +6,7 @@ To install the dot files:
 
 ```bash
 git clone https://github.com/mpercy/Dotfiles.git ~/Dotfiles
-pip install --user dotfiles # see https://pypi.python.org/pypi/dotfiles
+pip3 install --user dotfiles # see https://pypi.python.org/pypi/dotfiles
 dotfiles --sync
 ```
 
@@ -20,14 +20,20 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 For vim:
 
 ```bash
-pip install --user powerline-status
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-vim +PluginInstall +qall
+pip3 install --user powerline-status
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall
 # For YCM
-cd ~/.vim/bundle/YouCompleteMe
+cd ~/.vim/plugged/YouCompleteMe
 ./install.py --clang-completer
 # For Command-T
-cd ~/.vim/bundle/command-t/ruby/command-t/ext/command-t
-ruby extconf.rb
+cd ~/.vim/plugged/command-t/lua/wincent/commandt/lib
 make
+```
+
+For zsh:
+
+```zsh
+brew install fzf
+git clone https://github.com/jandamm/zgenom.git "${HOME}/.zgenom"
 ```

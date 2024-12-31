@@ -2,74 +2,75 @@ set nocompatible
 filetype off                   " required!
 set encoding=utf-8
 
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#begin()
+"set rtp+=~/.vim/bundle/Vundle.vim/
+"call vundle#begin()
+call plug#begin()
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+"Plug 'gmarik/Vundle.vim'
 
 " github repos
-Plugin 'tpope/vim-sensible'
-"Plugin 'tpope/vim-unimpaired'
-if v:version >= 704
-  Plugin 'Valloric/YouCompleteMe'
-endif
-"Plugin 'Lokaltog/vim-easymotion'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'wincent/command-t'
-"Plugin 'fs111/pydoc.vim'
-Plugin 'mpercy/a.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'mpercy/ack.vim'
-"Plugin 'airblade/vim-gitgutter'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'ntpeters/vim-better-whitespace'
-"Plugin 'fholgado/minibufexpl.vim'   " resets split sizes wtf
+Plug 'tpope/vim-sensible'
+"Plug 'tpope/vim-unimpaired'
+" TODO: install ycm-compatible Vim
+"if v:version >= 704
+"  Plug 'Valloric/YouCompleteMe'
+"endif
+"Plug 'Lokaltog/vim-easymotion'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'wincent/command-t'
+"Plug 'fs111/pydoc.vim'
+Plug 'mpercy/a.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'mpercy/ack.vim'
+"Plug 'airblade/vim-gitgutter'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'ntpeters/vim-better-whitespace'
+"Plug 'fholgado/minibufexpl.vim'   " resets split sizes wtf
 
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'vim-scripts/mayansmoke'
-Plugin 'NLKNguyen/papercolor-theme'
-Plugin 'derekwyatt/vim-scala'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'vim-scripts/mayansmoke'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'derekwyatt/vim-scala'
 
 " color schemes
 " a bunch of colorschemes + a gui menu listing them
-"Plugin 'guns/xterm-color-table.vim'
-"Plugin 'flazz/vim-colorschemes'
-"Plugin 'wesgibbs/vim-irblack'
-"Plugin 'altercation/vim-colors-solarized' " looks terrible on console
-"Plugin 'desert-warm-256'
-"Plugin 'morhetz/gruvbox' " looks terrible on console
-Plugin 'mpercy/wombat256cpp2.vim'
+"Plug 'guns/xterm-color-table.vim'
+"Plug 'flazz/vim-colorschemes'
+"Plug 'wesgibbs/vim-irblack'
+"Plug 'altercation/vim-colors-solarized' " looks terrible on console
+"Plug 'desert-warm-256'
+"Plug 'morhetz/gruvbox' " looks terrible on console
+Plug 'mpercy/wombat256cpp2.vim'
 
 " go-lang support
-Plugin 'nsf/gocode', {'rtp': 'vim/'}
-Plugin 'fatih/vim-go'
+"Plug 'nsf/gocode', {'rtp': 'vim/'}
+"Plug 'fatih/vim-go'
 
 " asciidoc syntax support
-Plugin 'asciidoc/vim-asciidoc'
+Plug 'asciidoc/vim-asciidoc'
 
 " menu maker thing should go last
 "Bundle 'ColorSchemeMenuMaker'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
+call plug#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
-" Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+"     :PlugInstall to install plugins
+"     :PlugUpdate  to update plugins
+"     :PlugDiff    to review the changes from the last update
+"     :PlugClean   to remove plugins no longer in the list
 "
-" see :h vundle for more details or wiki for FAQ
+" For more information, see https://github.com/junegunn/vim-plug
 " Put your non-Plugin stuff after this line
 
 " Run powerline
@@ -131,8 +132,12 @@ set iskeyword+=^,,^-,^.,^:
 " No double spacing after periods when joining lines or reformatting.
 set nojoinspaces
 
-" Yank to X-windows keyboard in Vim 7.3.74 and above.
-set clipboard=unnamedplus
+" Yank to MacOS or X-windows keyboard in Vim 7.3.74 and above.
+if system('uname -s') == "Darwin\n"
+  set clipboard=unnamed " OSX
+else
+  set clipboard=unnamedplus " Linux
+endif
 
 " Don't clear the clipboard on exit. See http://stackoverflow.com/questions/6453595
 autocmd VimLeave * call system('xsel -ib', getreg('+'))
