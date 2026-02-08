@@ -203,3 +203,8 @@ if [ -f $LOCAL_BASHRC ]; then
   source $LOCAL_BASHRC
 fi
 unset LOCAL_BASHRC
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/mpercy/.lmstudio/bin"
+# End of LM Studio CLI section
+

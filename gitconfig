@@ -43,3 +43,5 @@
   default = current
 [http]
   cookiefile = /home/mpercy/.gitcookies
+[init]
+	defaultBranch = main

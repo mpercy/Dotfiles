@@ -78,3 +78,8 @@ if [ -f $LOCAL_PROFILE ]; then
   source $LOCAL_PROFILE
 fi
 unset LOCAL_PROFILE
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/mpercy/.lmstudio/bin"
+# End of LM Studio CLI section
+

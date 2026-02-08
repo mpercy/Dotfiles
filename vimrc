@@ -30,7 +30,7 @@ Plug 'mpercy/ack.vim'
 "Plug 'airblade/vim-gitgutter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'ntpeters/vim-better-whitespace'
+"Plug 'ntpeters/vim-better-whitespace'
 "Plug 'fholgado/minibufexpl.vim'   " resets split sizes wtf
 
 Plug 'godlygeek/tabular'
