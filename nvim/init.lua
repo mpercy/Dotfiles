@@ -22,18 +22,24 @@ require("lazy").setup({
   { "tpope/vim-sensible" },
   
   -- File navigation
-  { "ctrlpvim/ctrlp.vim" },
-  { 
-    "wincent/command-t",
-    build = "cd lua/wincent/commandt/lib && make",
-    init = function()
-      vim.g.CommandTRefreshMap = '<C-t>'
-      vim.g.CommandTMatchWindowAtTop = 1
-      vim.g.CommandTMaxFiles = 50000
-      vim.g.CommandTMaxCachedDirectories = 10000
-      vim.g.CommandTFileScanner = 'git'
-      vim.g.CommandTWildIgnore = vim.o.wildignore .. ",build/**,thirdparty/src/**,thirdparty/build/**,logs/**,**/target/**,**/CMakeFiles/**"
-    end
+  {
+    "ibhagwan/fzf-lua",
+    config = function()
+      local actions = require("fzf-lua.actions")
+      require("fzf-lua").setup({
+        actions = {
+          files = {
+            ["default"] = actions.file_edit_or_qf,
+            ["ctrl-s"]  = actions.file_split,   -- Command-T muscle memory
+            ["ctrl-x"]  = actions.file_split,   -- fzf-lua default
+            ["ctrl-v"]  = actions.file_vsplit,
+            ["ctrl-t"]  = actions.file_tabedit,
+            ["alt-q"]   = actions.file_sel_to_qf,
+            ["alt-l"]   = actions.file_sel_to_ll,
+          },
+        },
+      })
+    end,
   },
   
   -- File explorer
@@ -247,8 +253,12 @@ require("lazy").setup({
       })
       
       -- LSP settings
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- Shared defaults applied to every LSP server (nvim 0.11+ API)
+      vim.lsp.config('*', {
+        capabilities = capabilities,
+      })
       
       -- Global LSP keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -265,7 +275,7 @@ require("lazy").setup({
           vim.keymap.set('n', '<leader>js', vim.lsp.buf.signature_help, opts)
           vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
           vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-          vim.keymap.set('n', '<leader>f', function()
+          vim.keymap.set('n', '<leader>jf', function()
             vim.lsp.buf.format { async = true }
           end, opts)
           
@@ -294,8 +304,7 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>lR", vim.lsp.codelens.refresh, { desc = "Refresh code lens" })
       
       -- Configure clangd
-      lspconfig.clangd.setup({
-        capabilities = capabilities,
+      vim.lsp.config('clangd', {
         cmd = {
           "clangd",
           "--background-index",
@@ -310,10 +319,9 @@ require("lazy").setup({
           clangdFileStatus = true,
         },
       })
-      
+
       -- Configure rust-analyzer
-      lspconfig.rust_analyzer.setup({
-        capabilities = capabilities,
+      vim.lsp.config('rust_analyzer', {
         settings = {
           ["rust-analyzer"] = {
             imports = {
@@ -330,16 +338,16 @@ require("lazy").setup({
             procMacro = {
               enable = true,
             },
-            checkOnSave = {
+            checkOnSave = true,
+            check = {
               command = "clippy",
             },
           },
         },
       })
-      
+
       -- Configure pyright (Python)
-      lspconfig.pyright.setup({
-        capabilities = capabilities,
+      vim.lsp.config('pyright', {
         settings = {
           python = {
             analysis = {
@@ -351,10 +359,9 @@ require("lazy").setup({
           },
         },
       })
-      
+
       -- Configure gopls (Go)
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
+      vim.lsp.config('gopls', {
         settings = {
           gopls = {
             completeUnimported = true,
@@ -367,10 +374,9 @@ require("lazy").setup({
           },
         },
       })
-      
+
       -- Configure ts_ls (TypeScript/JavaScript)
-      lspconfig.ts_ls.setup({
-        capabilities = capabilities,
+      vim.lsp.config('ts_ls', {
         settings = {
           typescript = {
             inlayHints = {
@@ -398,6 +404,15 @@ require("lazy").setup({
           },
         },
       })
+
+      -- Enable all configured servers (auto-starts on matching filetype/root)
+      vim.lsp.enable({
+        'clangd',
+        'rust_analyzer',
+        'pyright',
+        'gopls',
+        'ts_ls',
+      })
     end,
   },
 })
@@ -421,6 +436,9 @@ vim.opt.lazyredraw = true
 vim.opt.mouse = "a"
 vim.opt.cursorline = true
 vim.opt.laststatus = 2
+
+-- Remember up to 1000 recently-edited files across sessions (for :FzfLua oldfiles)
+vim.opt.shada:append("'1000")
 
 -- Terminal color settings
 if vim.fn.has('termguicolors') == 1 and vim.env.TERM ~= 'xterm-256color' then
@@ -474,15 +492,6 @@ vim.g.vim_markdown_folding_disabled = 1
 vim.g.vim_markdown_fenced_languages = {'html', 'python', 'bash=sh', 'java', 'c++'}
 vim.g.vim_markdown_new_list_item_indent = 2
 
--- CtrlP settings
-vim.g.ctrlp_map = '<Leader>p'
-vim.g.ctrlp_match_window_bottom = 1
-vim.g.ctrlp_match_window_reversed = 1
-vim.g.ctrlp_custom_ignore = '\\v\\~$|\\.(o|swp|pyc|wav|mp3|ogg|blend)$|(^|[/\\\\])\\.(hg|git|bzr)($|[/\\\\])|__init__\\.py'
-vim.g.ctrlp_working_path_mode = 0
-vim.g.ctrlp_dotfiles = 0
-vim.g.ctrlp_switch_buffer = 0
-
 -- Key mappings
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
@@ -523,8 +532,12 @@ keymap('n', '<Leader>w|', '<C-w>|', opts)
 keymap('n', '<Leader>a', ':bprev<CR>', opts)
 keymap('n', '<Leader>s', ':bnext<CR>', opts)
 keymap('n', '<Leader>d', ':bprevious<CR>:bdelete #<CR>', opts)
-keymap('n', '<Leader>f', ':b ', { noremap = true })
-keymap('n', ';', ':CtrlPBuffer<CR>', opts)
+-- keymap('n', '<Leader>f', ':b ', { noremap = true })
+keymap('n', ';', '<Cmd>FzfLua oldfiles cwd_only=true include_current_session=true<CR>', opts)
+
+-- Fuzzy finder (fzf-lua) — both bindings so muscle memory from different systems works
+keymap('n', '<Leader>t', '<Cmd>FzfLua files<CR>', opts)
+keymap('n', '<Leader>ff', '<Cmd>FzfLua files<CR>', opts)
 
 -- Ack shortcuts
 keymap('n', '<leader>as', ':Ack! \'\\b<cword>\\b\' src/kudu/<CR>', opts)
