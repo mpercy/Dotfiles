@@ -20,6 +20,9 @@ setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
+# Save cwd so we can restore it if any zgenom plugin changes directory during init
+_startup_pwd="$PWD"
+
 # load zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
 
@@ -32,10 +35,13 @@ zgenom autoupdate
 if ! zgenom saved; then
 
   # specify plugins here
+  # Load order matters: zsh-autosuggestions and zsh-syntax-highlighting
+  # both wrap widgets and want to load late. Syntax-highlighting must be
+  # the very last plugin per its upstream README.
   zgenom load romkatv/powerlevel10k powerlevel10k
+  zgenom load softmoth/zsh-vim-mode
   zgenom load zsh-users/zsh-autosuggestions
   zgenom load zsh-users/zsh-syntax-highlighting
-  zgenom load softmoth/zsh-vim-mode
 
   # generate the init script from plugins above
   zgenom save
@@ -44,8 +50,13 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# For building Kudu
-export PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig:$PKG_CONFIG_PATH"
+# fzf shell integration: fuzzy Ctrl+R, Ctrl+T file picker, Alt+C cd picker.
+# Sourced after zgenom plugin loads so fzf's Ctrl+R binding wins over vim-mode's.
+if [[ -d /opt/homebrew/opt/fzf/shell ]]; then
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+  source /opt/homebrew/opt/fzf/shell/completion.zsh
+fi
+
 
 ####################################################
 # PATH
@@ -68,9 +79,9 @@ export PATH=$HOME/bin:$PATH
 # Added by Windsurf
 #export PATH="/Users/mpercy/.codeium/windsurf/bin:$PATH"
 
-# Ensure we start in home directory
-# Some zgenom plugins mess up cwd
-cd "$HOME"
+# Restore cwd if any plugin changed it during zgenom init
+[[ "$PWD" != "$_startup_pwd" ]] && cd "$_startup_pwd"
+unset _startup_pwd
 
 alias ll="ls -al"
 alias chrome="open -a 'Google Chrome'"
@@ -79,3 +90,10 @@ alias chrome="open -a 'Google Chrome'"
 export PATH="$PATH:/Users/mpercy/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+# bun completions
+[ -s "/Users/mpercy/.bun/_bun" ] && source "/Users/mpercy/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
