@@ -1,2 +1,4 @@
 nvim/lazy-lock.json
 nvim/undo/
+__pycache__/
+*.pyc
