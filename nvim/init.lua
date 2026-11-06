@@ -83,75 +83,108 @@ require("lazy").setup({
   { "NLKNguyen/papercolor-theme" },
   { "mpercy/wombat256cpp2.vim" },
   
-  -- Treesitter for better syntax highlighting
+  -- Treesitter. The main branch only installs parsers and queries, so
+  -- highlighting, indentation, and textobject keymaps are wired up here.
+  -- Incremental selection is built into Neovim 0.12: an, in, ]n, [n in visual mode.
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
+    },
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "c", "cpp", "lua", "vim", "vimdoc", "query",  -- Core
-          "rust", "python", "go", "typescript", "javascript",  -- Languages
-          "bash", "json", "yaml", "toml", "markdown", "markdown_inline",  -- Config/Docs
-          "html", "css", "sql", "dockerfile", "cmake",  -- Web/Tools
-        },
-        sync_install = false,
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-        indent = {
-          enable = true,
-        },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = "<C-s>",
-            node_decremental = "<C-backspace>",
-          },
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-              ["]m"] = "@function.outer",
-              ["]]"] = "@class.outer",
-            },
-            goto_next_end = {
-              ["]M"] = "@function.outer",
-              ["]["] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[m"] = "@function.outer",
-              ["[["] = "@class.outer",
-            },
-            goto_previous_end = {
-              ["[M"] = "@function.outer",
-              ["[]"] = "@class.outer",
-            },
-          },
-        },
+      local ts = require("nvim-treesitter")
+      ts.install({
+        "c", "cpp", "lua", "vim", "vimdoc", "query",  -- Core
+        "rust", "python", "go", "typescript", "javascript",  -- Languages
+        "bash", "json", "yaml", "toml", "markdown", "markdown_inline",  -- Config/Docs
+        "html", "css", "sql", "dockerfile", "cmake",  -- Web/Tools
+      })
+
+      require("nvim-treesitter-textobjects").setup({
+        select = { lookahead = true },
+        move = { set_jumps = true },
+      })
+
+      local select_maps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+      }
+      local move_maps = {
+        goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
+        goto_next_end = { ["]M"] = "@function.outer", ["]["] = "@class.outer" },
+        goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
+        goto_previous_end = { ["[M"] = "@function.outer", ["[]"] = "@class.outer" },
+      }
+
+      -- Buffer-local, and only where a textobjects query exists, so these win
+      -- over ftplugin maps but leave [[ and ]] alone in every other filetype.
+      local function map_textobjects(buf)
+        local select = require("nvim-treesitter-textobjects.select")
+        local move = require("nvim-treesitter-textobjects.move")
+        for lhs, capture in pairs(select_maps) do
+          vim.keymap.set({ "x", "o" }, lhs, function()
+            select.select_textobject(capture, "textobjects")
+          end, { buffer = buf, desc = "TS select " .. capture })
+        end
+        for method, maps in pairs(move_maps) do
+          for lhs, capture in pairs(maps) do
+            vim.keymap.set({ "n", "x", "o" }, lhs, function()
+              move[method](capture, "textobjects")
+            end, { buffer = buf, desc = "TS " .. method .. " " .. capture })
+          end
+        end
+      end
+
+      local function attach(buf, lang)
+        if not pcall(vim.treesitter.start, buf, lang) then
+          return
+        end
+        if #vim.treesitter.query.get_files(lang, "indents") > 0 then
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+        if #vim.treesitter.query.get_files(lang, "textobjects") > 0 then
+          map_textobjects(buf)
+        end
+      end
+
+      local available = nil
+      local attempted = {}
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("user_treesitter", { clear = true }),
+        callback = function(args)
+          local buf, ft = args.buf, args.match
+          local lang = vim.treesitter.language.get_lang(ft) or ft
+          if vim.treesitter.language.add(lang) then
+            attach(buf, lang)
+            return
+          end
+          -- Replaces master's auto_install: fetch a known parser on first use.
+          if vim.bo[buf].buftype ~= "" or attempted[lang] then
+            return
+          end
+          available = available or ts.get_available()
+          if vim.list_contains(available, lang) then
+            attempted[lang] = true
+            ts.install({ lang }):await(function()
+              vim.schedule(function()
+                if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == ft
+                  and vim.treesitter.language.add(lang) then
+                  attach(buf, lang)
+                end
+              end)
+            end)
+          end
+        end,
       })
     end,
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
   },
   
   -- LSP Support
